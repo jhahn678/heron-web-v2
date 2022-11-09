@@ -17,37 +17,14 @@ a {
   box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-
-  body {
-    color: white;
-    background: var(--black);
-  }
-}
-
-
 :root {
-  --black: #252523;
-  --white: #F4F4F4;
-  --gray: #AFAEAE;
-  --orange: #F0903F;
-  --orangeLight: #FFB680;
-  --orangeGradient: linear-gradient(180deg, #F0903F 0%, #FFB680 100%);
-  --orangeShadow: 0px 2px 12px rgba(240, 144, 63, 0.4);
-  --orangeDropShadow: drop-shadow(0px 2px 12px rgba(240, 144, 63, 0.4));
-  --whiteDropShadow: drop-shadow(0px 1px 10px rgba(255, 255, 255, .3));
-  --red: #f05c3f
-}
-
-.text-gradient {
-  background: var(--orangeGradient);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: var(--orangeShadow)
+  --black: #000000;
+  --white: #ffffff;
+  --gray: #f2f2f2;
+  --grayDark: #d9d9d9;
+  --primary: #00668B;
+  --secondary: #C6E6FA;
+  --secondaryLight: #E2F3FD;
 }
 
 .frsb {
