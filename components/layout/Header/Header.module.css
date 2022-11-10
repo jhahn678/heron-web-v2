@@ -73,3 +73,13 @@
     gap: 16px;
 }
 
+@media screen and (max-height: 650px) {
+    .drawerLink {
+        font-size: 28px;
+    }
+}
+@media screen and (max-width: 750px) {
+    .container{
+        padding: 0;
+    }
+}
