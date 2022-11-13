@@ -1,5 +1,4 @@
 import { GeometryCollection, MultiLineString, MultiPolygon } from "geojson"
-import { AdminOneName } from "./AdminOne"
 import { IMedia } from "./Media"
 
 
@@ -70,5 +69,18 @@ export interface IWaterbodyReview {
     created_at: Date
 }
 
+/******** */
+/******** */
+/******** */
+/******** */
+/******** */
+
+
+export interface WaterbodyListItem extends Omit<IWaterbody, 'weight' | 'oid'> {
+  media: Pick<IMedia, "url" | "id">[];
+  total_catches: number;
+  total_locations: number;
+  average_rating: number | null;
+}
 
 
