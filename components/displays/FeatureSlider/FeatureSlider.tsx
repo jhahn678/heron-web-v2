@@ -1,9 +1,8 @@
 import 'swiper/css';
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from 'next/image';
 import styles from './FeatureSlider.module.css'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Swiper as ISwiper} from 'swiper/types'
 import { Button, Typography } from '@mui/material';
 import Stack from '@mui/system/Stack';
 import FeatureSliderPagination from './FeatureSliderPagination';

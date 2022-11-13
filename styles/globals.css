@@ -25,6 +25,8 @@ a {
   --primary: #00668B;
   --secondary: #C6E6FA;
   --secondaryLight: #E2F3FD;
+  --secondaryTransparent: rgba(226, 243, 253, .7);
+  --yellow: #FFD233;
 }
 
 .frsb {

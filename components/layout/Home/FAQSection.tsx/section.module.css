@@ -1,0 +1,40 @@
+.container{
+    height: 500px;
+    width: 100vw;
+    position: relative;
+    margin-bottom: 10vh;
+    background-image: url('https://heron-static.s3.amazonaws.com/unsplash-fishing.png');
+    background-position: right;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 3px 15px 0px;
+}
+.card{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    padding: 16px;
+    gap: 16px;
+    background-color: var(--secondaryTransparent);
+}
+
+@media screen and (min-width: 600px) {
+    .card{
+        height: unset;
+        width: 500px;
+        padding: 48px 24px; 
+        border-radius: 16px;
+        margin-left: 24px;
+        background-color: var(--secondaryLight);
+    }
+}
+@media screen and (min-width: 1000px) {
+    .card {
+        margin-left: 48px;
+        gap: 24px;
+    }
+}

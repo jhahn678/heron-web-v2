@@ -1,0 +1,27 @@
+ .container{
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    background-color: var(--secondaryLight);
+    margin-bottom: 10vh;
+    padding: 24px 0 32px;
+ }
+ .slider{
+    margin-top: 32px;
+ }
+ .button{
+    width: fit-content;
+    align-self: center;
+ }
+ .paddingX{
+    padding-left: 16px;
+    padding-right: 16px;
+ }
+
+ @media screen and (min-width: 800px) {
+    .paddingX {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+ }
+ 
