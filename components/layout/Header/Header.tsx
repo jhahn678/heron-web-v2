@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from './Header.module.css'
 import Image from "next/image";
 import Link from "next/link";
@@ -7,15 +7,31 @@ import { BiMenuAltRight } from 'react-icons/bi'
 import { MdClose } from 'react-icons/md'
 import { useAuth } from "../../../hooks/store/useAuth";
 
-const Header = () => {
+interface Props {
+    fixed?: boolean
+}
+
+const Header = ({ fixed }: Props) => {
 
     const [drawer, setDrawer] = useState(false)
     const maxWidth750 = useMediaQuery('(max-width: 750px)')
     const { isAuthenticated, avatar, firstname } = useAuth()
-    const [menuOpen, setMenuOpen] = useState(false)
+    const [hasScrolled, setHasScrolled] = useState(false)
+
+    useEffect(() => {
+        const handleScroll = () => setHasScrolled(window.scrollY > 50)
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, [])
 
     return (
-        <header className={styles.container}>
+        <header 
+            className={styles.container} 
+            style={{ 
+                position: fixed ? 'fixed' : 'unset', 
+                backgroundColor: hasScrolled ? 'var(--secondaryLight)' : undefined
+            }}
+        >
             <div className={'frac'}>
                 <Image src={'/logo-transparent-124.svg'} height={90} width={90} alt={'Heron logo'}/>
                 <h3 className={styles.title}>Heron</h3>
