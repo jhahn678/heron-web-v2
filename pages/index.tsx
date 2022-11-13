@@ -8,6 +8,9 @@ import { Stack, useMediaQuery } from '@mui/material'
 import Link from 'next/link'
 import FisheriesCard from '../components/displays/FisheriesCard/FisheriesCard'
 import FeatureSlider from '../components/displays/FeatureSlider/FeatureSlider'
+import WaterbodiesSlider from '../components/displays/WaterbodiesSlider/WaterbodiesSlider'
+import SharePicturesSection from '../components/layout/Home/SharePicturesSection/SharePicturesSection'
+import FAQSection from '../components/layout/Home/FAQSection.tsx/FAQSection'
 
 export default function Home() {
 
@@ -58,6 +61,9 @@ export default function Home() {
       <section className={styles.featureSliderSection}>
         <FeatureSlider/>
       </section>
+      <WaterbodiesSlider/>
+      <SharePicturesSection/>
+      <FAQSection/>
       <Footer/>
     </div>
   )
