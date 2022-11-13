@@ -4,6 +4,14 @@ let theme = createTheme({
     typography: {
         fontFamily: ['Poppins','sans-serif',].join(','),
     },
+    palette: {
+        primary: {
+            main: '#00668B'
+        },
+        secondary: {
+            main: '#C6E6FA'
+        }
+    },
     components: {
         MuiButton: {
             styleOverrides: {
