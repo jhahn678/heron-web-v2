@@ -53,3 +53,15 @@ export enum LinkedAccount {
     Google = 'google',
     Facebook = 'facebook'
 }
+
+export interface TokenResponse {
+    accessToken: string,
+    refreshToken: string, 
+}
+
+export interface AuthResponse extends TokenResponse{
+    id: number,
+    firstname: string,
+    username: string, 
+    avatar: string, 
+}
