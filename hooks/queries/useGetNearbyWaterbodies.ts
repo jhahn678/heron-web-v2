@@ -1,5 +1,6 @@
 import { gql, useQuery } from '@apollo/client'
 import { NearbyWaterbody, WaterbodyClassification } from '../../types/Waterbody'
+import { useLocationStore } from '../store/useLocationStore'
 
 //@TODO --- Change sort to enum on backend then here
 
@@ -29,8 +30,6 @@ query Waterbodies($classifications: [ClassificationEnum!], $queryLocation: Query
 
 
 interface GetNearbyWaterbodiesArgs {
-    longitude: number | null,
-    latitude: number | null,
     classification?: WaterbodyClassification
     sort?: 'distance' | 'rank'
     limit?: number
@@ -38,22 +37,21 @@ interface GetNearbyWaterbodiesArgs {
 
 type GetNearbyWaterbodies= { waterbodies: NearbyWaterbody[] }
 
-export const useGetNearbyWaterbodies = ({
-    longitude, latitude, classification, sort='distance', limit=5
-}: GetNearbyWaterbodiesArgs) => {
+export const useGetNearbyWaterbodies = (args?: GetNearbyWaterbodiesArgs) => {
+
+    const { coords } = useLocationStore()
 
     const result = useQuery<GetNearbyWaterbodies>(GET_WATERBODIES, {
         fetchPolicy: 'cache-first',
-        skip: !Boolean(latitude && longitude),
+        skip: !Boolean(coords),
         variables: { 
             queryLocation: { 
-                longitude, 
-                latitude, 
+                ...coords,
                 withinMeters: 100000 
             },
-            classifications: classification ? [classification] : null,
-            limit, 
-            sort
+            classifications: Boolean(args && args.classification) ? [args.classification] : null,
+            limit: Boolean(args && args.limit) ? args.limit : 8, 
+            sort: Boolean(args && args.sort) ? args.sort : 'distance'
         }
     })
     
