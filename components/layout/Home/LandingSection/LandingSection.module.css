@@ -1,0 +1,103 @@
+.main {
+    position: relative;
+    width: 100vw;
+    overflow: hidden;
+    min-height: 110vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 24px solid var(--secondary);
+}
+
+.image {
+    min-height: 475px;
+    min-width: 475px;
+    max-height: 650px;
+    max-width: 650px;
+    height: 120vw;
+    width: 120vw;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 0;
+}
+
+.image::after {
+    content: '';
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    background-color: var(--secondary);
+    opacity: .4;
+}
+
+.imageCircleOne {
+    display: none;
+    position: absolute;
+    bottom: 36px;
+    right: 36px;
+    height: 98%;
+    width: 98%;
+    border-radius: 50%;
+    background-color: var(--secondaryLight);
+}
+
+.imageCircleTwo {
+    display: none;
+    position: absolute;
+    top: 32px;
+    right: 48px;
+    height: 98%;
+    width: 98%;
+    border-radius: 50%;
+    background-color: var(--secondary);
+}
+
+.linesImage {
+    position: relative;
+    z-index: 1;
+    width: 90%;
+    max-width: 400px;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    height: 40px;
+}
+
+
+@media screen and (min-width: 750px) {
+    .imageCircleOne,
+    .imageCircleTwo {
+        display: block;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .image {
+        min-height: 475px;
+        min-width: 475px;
+        max-height: 800px;
+        max-width: 800px;
+        height: 65vw;
+        width: 65vw;
+        right: -120px;
+        bottom: -120px;
+    }
+
+    .main {
+        align-items: flex-start;
+        padding-left: 5vw;
+    }
+}
+
+@media screen and (min-width: 1400px) {
+    .main {
+        padding-left: 10vw;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .main {
+        padding-left: 15vw;
+    }
+}
