@@ -30,19 +30,7 @@ const WaterbodyCard = ({ data }: Props) => {
             <div className={styles.content}>
                 <Stack>
                     <div className={'frsb'}>
-                        <Typography variant="h5" fontWeight={500}>{"Swatara Creek"}</Typography>
-                        <div className='frac'>
-                            5<FaStar color={'var(--yellow)'} size={20} className={styles.star}/>
-                        </div>
-                    </div>
-                    <Typography>{"Pennsylvania, United States"}</Typography>
-                    <Typography variant="body2" paddingTop={2}>
-                        {8} catches logged
-                        {"  "}&bull;{"  "}
-                        {4} saved locations
-                    </Typography>
-                    {/* <div className={'frsb'}>
-                        <Typography variant="h5" fontWeight={500}>{"Swatara Creek"}</Typography>
+                        <Typography variant="h5" fontWeight={500}>{data.name}</Typography>
                         <div className='frac'>
                             {data.average_rating || 0}<FaStar color={'var(--yellow)'} size={20}/>
                         </div>
@@ -52,7 +40,7 @@ const WaterbodyCard = ({ data }: Props) => {
                         {truncateTotal(data.total_catches)} catches logged
                         {"  "}&bull;{"  "}
                         {truncateTotal(data.total_locations)} saved locations
-                    </Typography> */}
+                    </Typography>
                 </Stack>
             </div>
         </div>  
