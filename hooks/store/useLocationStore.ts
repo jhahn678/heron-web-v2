@@ -14,7 +14,10 @@ export const useLocationStore = create<LocationStore>((set) => ({
     coords: null,
     hasPermission: undefined,
     isFetchingLocation: false,
-    setCoordinates: coords => set({ coords, isFetchingLocation: false }),
+    setCoordinates: ({ longitude, latitude }) => set({ 
+        coords: { longitude, latitude },
+        isFetchingLocation: false 
+    }),
     clearCoordinates: () => set({ coords: null }),
     setIsFetching: isFetchingLocation  => set({ isFetchingLocation }),
     setHasPermission: hasPermission => set({ hasPermission })
