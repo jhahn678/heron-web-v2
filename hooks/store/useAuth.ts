@@ -24,7 +24,6 @@ export interface AuthStore {
     signOut: () => Promise<void>,
     autoSignIn: (token: string) => Promise<void>,
     getAccessToken: () => Promise<string | null>,
-    refreshAccessToken: () => Promise<string | null>,
     setDetails: (args: { firstname?: string, username?: string, avatar?: string }) => void
 }
 
@@ -37,15 +36,11 @@ export const useAuth = create<AuthStore>((set) => ({
     isAuthenticated: false,
     setUser: async (data: AuthResponse, isAuthenticated=true) => {
         const { accessToken, refreshToken, ...user } = data;
-        // await SecureStore.setItemAsync(SecureStoreKeys.REFRESH_TOKEN, refreshToken)
-        // await SecureStore.setItemAsync(SecureStoreKeys.ACCESS_TOKEN, accessToken)
         set({ isAuthenticated, ...user })
     },
     setAuthenticated: isAuthenticated => set({ isAuthenticated }),
     setDetails: details => set({ ...details }),
     signOut: async () => {
-        // await SecureStore.deleteItemAsync(SecureStoreKeys.REFRESH_TOKEN)
-        // await SecureStore.deleteItemAsync(SecureStoreKeys.ACCESS_TOKEN)
         set({
             id: null,
             avatar: null,
@@ -54,59 +49,24 @@ export const useAuth = create<AuthStore>((set) => ({
             isAuthenticated: false
         })
     },
-    autoSignIn: async (token: string) => {
+    autoSignIn: async () => {
         try{
             const { data } = await axios
-                .post<AuthResponse>('/auth/token', { token, includeUser: true })
+                .post<AuthResponse>('/auth/token', { includeUser: true })
             const { accessToken, refreshToken, ...user } = data;
-            // await SecureStore.setItemAsync(SecureStoreKeys.REFRESH_TOKEN, refreshToken)
-            // await SecureStore.setItemAsync(SecureStoreKeys.ACCESS_TOKEN, accessToken)
             set({ isAuthenticated: true, ...user })
         }catch(err){
             console.error('auto sign in failed', err);
-            // await SecureStore.deleteItemAsync(SecureStoreKeys.REFRESH_TOKEN)
-            // await SecureStore.deleteItemAsync(SecureStoreKeys.ACCESS_TOKEN)
         }
     },
     getAccessToken: async () => {
         try{
-            // const existing = await SecureStore.getItemAsync(SecureStoreKeys.ACCESS_TOKEN)
-            // if(existing) return existing;
-            // const token = await SecureStore.getItemAsync(SecureStoreKeys.REFRESH_TOKEN)
-            // const { data } = await axios.post<TokenResponse>('/auth/token', { token })
-            // const { refreshToken, accessToken } = data;
-            // await SecureStore.setItemAsync(SecureStoreKeys.REFRESH_TOKEN, refreshToken)
-            // await SecureStore.setItemAsync(SecureStoreKeys.ACCESS_TOKEN, accessToken)
-            // return data.accessToken
+            const { data } = await axios.post<TokenResponse>('/auth/token')
+            return data.accessToken
         }catch(err){
-            // await SecureStore.deleteItemAsync(SecureStoreKeys.ACCESS_TOKEN)
-            // await SecureStore.deleteItemAsync(SecureStoreKeys.REFRESH_TOKEN)
-            // console.error('error getting/refreshing access token', err)
-            // set({ isAuthenticated: false })
+            console.error('error getting/refreshing access token', err)
+            set({ isAuthenticated: false })
             return null;
         }
-    },
-    /**
-     * ### Function for non graphql related authenticated requests
-     * When invoked will attempt to refresh access token with the stored refresh token
-     * @success will update SecureStore and return access token
-     * @failure will update SecureStore, set authenticated to false, and return null 
-     * @returns Either an access token on success or null if unsuccessful
-     */
-    refreshAccessToken:  async (): Promise<string | null> => {
-        try{
-            // const token = await SecureStore.getItemAsync(SecureStoreKeys.REFRESH_TOKEN)
-            // if(!token) throw new Error('No refresh token available')
-            // const { data } = await axios.post<TokenResponse>('/auth/token', { token })
-            // await SecureStore.setItemAsync(SecureStoreKeys.ACCESS_TOKEN, data.accessToken)
-            // await SecureStore.setItemAsync(SecureStoreKeys.REFRESH_TOKEN, data.refreshToken)
-            // return data.accessToken;
-        }catch(err){
-            // console.error('error refreshing access token', err)
-            // await SecureStore.deleteItemAsync(SecureStoreKeys.ACCESS_TOKEN)
-            // await SecureStore.deleteItemAsync(SecureStoreKeys.REFRESH_TOKEN)
-            // set({ isAuthenticated: false })
-            return null;
-        }
-}
+    }
 }))
