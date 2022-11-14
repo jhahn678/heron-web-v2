@@ -1,8 +1,6 @@
-import { axios } from "../../config/axios";
-import { SecureStoreKeys } from "../../types/SecureStore";
-import * as SecureStore from 'expo-secure-store'
+import axios from "../../config/axios";
+
 import { useEffect, useState } from "react";
-import { useIsFocused } from "@react-navigation/native";
 
 interface Args {
     onError: () => void
@@ -10,7 +8,6 @@ interface Args {
 
 export const useCheckAccountHasPassword = ({ onError }: Args) => {
 
-    const focused = useIsFocused()
     const [hasPassword, setHasPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const [success, setSuccess] = useState(false)
@@ -20,10 +17,7 @@ export const useCheckAccountHasPassword = ({ onError }: Args) => {
         (async (): Promise<{ hasPassword: boolean } | void> => {
             try{
                 setLoading(true)
-                const token = await SecureStore.getItemAsync(SecureStoreKeys.ACCESS_TOKEN)
-                const res = await axios.get<{ hasPassword: boolean }>('/auth/has-password', {
-                    headers: { 'Authorization': `Bearer ${token}`}
-                })
+                const res = await axios.get<{ hasPassword: boolean }>('/auth/has-password')
                 setLoading(false); setError(false); setSuccess(true)
                 setHasPassword(res.data.hasPassword)
             }catch(err){
@@ -33,7 +27,7 @@ export const useCheckAccountHasPassword = ({ onError }: Args) => {
                 onError()
             }
         })()
-    },[focused])
+    },[])
 
     return { hasPassword, loading, success, error }
 

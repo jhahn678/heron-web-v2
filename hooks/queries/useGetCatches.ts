@@ -1,6 +1,6 @@
 import { gql, useLazyQuery, useQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
-import { useLocationStore } from '../../store/location/useLocationStore'
+import { useLocationStore } from '../store/useLocationStore'
 import { CatchQuery, CatchSort, ICatch } from '../../types/Catch'
 import { IMedia } from '../../types/Media'
 import { MapResource } from '../../types/navigation'

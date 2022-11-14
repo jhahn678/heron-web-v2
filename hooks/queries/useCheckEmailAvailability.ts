@@ -1,4 +1,4 @@
-import { axios } from "../../config/axios";
+import axios from "../../config/axios";
 import { useState, useEffect } from 'react'
 import * as yup from 'yup'
 
