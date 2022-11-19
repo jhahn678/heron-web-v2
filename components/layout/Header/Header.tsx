@@ -6,6 +6,7 @@ import { Avatar, Button, Divider, Drawer, IconButton, Stack, useMediaQuery } fro
 import { BiMenuAltRight } from 'react-icons/bi'
 import { MdClose } from 'react-icons/md'
 import { useAuth } from "../../../hooks/store/useAuth";
+import { useRouter } from "next/router";
 
 interface Props {
     fixed?: boolean
@@ -13,8 +14,11 @@ interface Props {
 
 const Header = ({ fixed }: Props) => {
 
+    const router = useRouter()
+
     const [drawer, setDrawer] = useState(false)
     const maxWidth750 = useMediaQuery('(max-width: 750px)')
+
     const { isAuthenticated, avatar, firstname } = useAuth()
     const [hasScrolled, setHasScrolled] = useState(false)
 
@@ -78,11 +82,15 @@ const Header = ({ fixed }: Props) => {
                     <li className={styles.navLink}><Link href={'/support'}>Support</Link></li>
                     {isAuthenticated ? 
                         avatar ?
-                            <Avatar src={avatar} alt={'User Avatar'}/> :
+                            <Avatar src={avatar} alt={'User Avatar'} className={styles.avatar}/> :
                         firstname ?
-                            <Avatar sx={{ bgcolor: 'var(--primary)' }}>{firstname[0]}</Avatar> :
-                            <Avatar sx={{ bgcolor: 'var(--primary)' }}/> :
-                            <Button variant="contained" size="large">Sign in</Button>
+                            <Avatar sx={{ bgcolor: 'var(--primary)' }} className={styles.avatar}>{firstname[0]}</Avatar> :
+                            <Avatar sx={{ bgcolor: 'var(--primary)' }} className={styles.avatar}/> :
+                            <Button 
+                                size="large" 
+                                variant="contained" 
+                                onClick={() => router.push('/auth/login')}
+                            >Sign in</Button>
                     }
                 </ul>
             }

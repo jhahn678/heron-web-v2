@@ -76,6 +76,10 @@
     justify-content: center;
     gap: 16px;
 }
+.avatar{
+    height: 50px;
+    width: 50px;
+}
 
 @media screen and (max-height: 650px) {
     .drawerLink {

@@ -1,6 +1,5 @@
 import axios from "../../config/axios";
-import { useState, useEffect } from 'react'
-import * as yup from 'yup'
+import { Dispatch, useEffect, useReducer } from 'react'
 
 interface CheckEmailAvailabilityRes {
     email: string,
@@ -8,14 +7,55 @@ interface CheckEmailAvailabilityRes {
     available: boolean
 }
 
-export const useCheckEmailAvailability = (value: string) => {
+type Action = 
+| { type: 'INPUT', value: string }
+| { type: 'LOADING', value: boolean }
+| { type: 'RESPONSE', value: CheckEmailAvailabilityRes}
+| { type: 'RESET' }
 
-    const [isAvailable, setIsAvailable] = useState<Boolean | null>(null)
-    const [touched, setTouched] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-    const [isError, setIsError] = useState(false)
+interface EmailState {
+    value: string
+    valid: boolean,
+    loading: boolean
+    available: boolean
+    touched: boolean
+}
 
-    const schema = yup.string().min(8).email()
+const initialState: EmailState = {
+    value: '',
+    valid: false,
+    loading: false,
+    available: false,
+    touched: false
+}
+
+const reducer = (state: EmailState, action: Action) => {
+    if(action.type === 'INPUT'){
+        return { 
+            ...state,
+            touched: true,
+            value: action.value,
+            valid: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(action.value)
+        } 
+    }else if(action.type === 'LOADING'){
+        return { ...state, loading: action.value}
+    }else if(action.type === 'RESPONSE'){
+        return { 
+            ...state,  
+            loading: false,
+            available: action.value.available,
+            valid: action.value.valid
+        }
+    }else if(action.type === 'RESET'){
+        return initialState;
+    }else{
+        return state;
+    }
+}
+
+export const useCheckEmailAvailability = (): [EmailState, Dispatch<Action>] => {
+    
+    const [state, dispatch] = useReducer(reducer, initialState)
 
     const queryEmail = async (email: string) => {
         const res = await axios.get<CheckEmailAvailabilityRes>(`/auth/email?email=${email}`)
@@ -23,34 +63,15 @@ export const useCheckEmailAvailability = (value: string) => {
     }
 
     useEffect(() => {
-        const timer = setTimeout(async () => {
-            if(schema.isValidSync(value)){
-                setIsLoading(true)
-                setTouched(true)
-                try{
-                    const res = await queryEmail(value)
-                    setIsLoading(false)
-                    setIsAvailable(res.available)
-                    setIsError(!res.valid)
-                }catch(err){
-                    setIsLoading(false)
-                    setIsAvailable(null)
-                    setIsError(true)
-                }
-            }else if(touched){
-                setIsError(true)
-                setIsAvailable(null)
-            }else{
-                setIsAvailable(null)
-            }
-        }, 500)
+        if(state.valid){
+            const timer = setTimeout(async () => {
+                dispatch({ type: 'LOADING', value: true })
+                const response = await queryEmail(state.value)
+                dispatch({ type: 'RESPONSE', value: response })
+            },300)
+            return () => clearTimeout(timer)
+        }
+    },[state.value])
 
-        return () => clearTimeout(timer)
-    }, [value])
-
-    return {
-        isAvailable,
-        isLoading,
-        isError
-    }
+    return [state, dispatch]
 }

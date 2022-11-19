@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { axios } from '../../config/axios'
-import { AuthResponse, useAuth } from '../../store/auth/useAuth'
+import axios from '../../config/axios'
+import { AuthResponse, useAuth } from '../../hooks/store/useAuth'
 
 interface CreateAccountParams {
     firstname: string,
