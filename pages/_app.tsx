@@ -1,10 +1,11 @@
+import '../styles/globals.css'
 import { ApolloProvider } from '@apollo/client'
 import { ThemeProvider } from '@mui/material'
 import Modal from '../components/modal/Modal'
 import { apolloClient } from '../config/apollo'
 import theme from '../config/theme'
 import { useCurrentLocation } from '../hooks/utils/useCurrentLocation'
-import '../styles/globals.css'
+import { SnackbarProvider } from 'notistack';
 
 function MyApp({ Component, pageProps }) {
 
@@ -13,8 +14,10 @@ function MyApp({ Component, pageProps }) {
   return( 
     <ThemeProvider theme={theme}>
       <ApolloProvider client={apolloClient}>
-        <Component {...pageProps} />
-        <Modal/>
+        <SnackbarProvider maxSnack={3}>
+          <Component {...pageProps} />
+          <Modal/>
+        </SnackbarProvider>
       </ApolloProvider>
     </ThemeProvider>
   )

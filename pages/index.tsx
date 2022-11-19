@@ -16,8 +16,6 @@ export default function Home() {
 
   const { data, error } = useGetNearbyWaterbodies()
 
-  console.log(data, error)
-
   return (
     <div className={styles.page}>
       <Head><title>Heron Mobile</title></Head>
