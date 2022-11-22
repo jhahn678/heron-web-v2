@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import styles from './Header.module.css'
 import Image from "next/image";
 import Link from "next/link";
-import { Avatar, Button, Divider, Drawer, IconButton, Stack, useMediaQuery } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import useMediaQuery from '@mui/material/useMediaQuery'
 import { BiMenuAltRight } from 'react-icons/bi'
 import { MdClose } from 'react-icons/md'
 import { useAuth } from "../../../hooks/store/useAuth";
@@ -45,6 +51,7 @@ const Header = ({ fixed }: Props) => {
                     <Drawer anchor={'left'} open={drawer} onClose={() => setDrawer(false)}>
                         <div className={styles.drawer}>
                             <div className={styles.drawerHeader}>
+
                                 <IconButton onClick={() => setDrawer(false)}>
                                     <MdClose size={36} color={'var(--primary)'}/>
                                 </IconButton>
@@ -58,11 +65,24 @@ const Header = ({ fixed }: Props) => {
                                 <li className={styles.drawerLinkSmall}><Link href={'/faq'}>FAQ</Link></li>
                                 <li className={styles.drawerLinkSmall}><Link href={'/privacy-policy.html'}>Privacy Policy</Link></li>
                                 <li className={styles.drawerLinkSmall}><Link href={'/terms-of-service.html'}>Terms of Service</Link></li>
-                                <Divider style={{ marginBottom: 16}}/>
-                                <Stack gap={1}>
-                                    <Button variant="contained" size="large">Sign in</Button>
-                                    <Button variant="contained" size="large">I&#39;m new here</Button>
-                                </Stack>
+                                { isAuthenticated ? 
+                                    <Stack gap={2}>
+                                        <Divider/>
+                                        <li className={styles.drawerLinkSmall}><Link href={'/faq'}>Settings</Link></li>
+                                        <li className={styles.drawerLinkSmall}><Link href={'/privacy-policy.html'}>Sign out</Link></li>
+                                    </Stack> :
+                                    <Stack gap={1}>
+                                        <Divider style={{ marginBottom: 16}}/>
+                                        <Button 
+                                            variant="contained" size="large" 
+                                            onClick={() => router.push('/auth/login')}
+                                        >Sign in</Button>
+                                        <Button 
+                                            variant="contained" size="large" 
+                                            onClick={() => router.push('/auth/register')}
+                                        >I&#39;m new here</Button>
+                                    </Stack>
+                                }
                             </ul>
                             <Stack direction={'row'} spacing={1} justifyContent={'center'}>
                                 <a href={'/'} target={'_blank'} rel={'noreferrer'}>
