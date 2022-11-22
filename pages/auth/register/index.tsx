@@ -1,6 +1,7 @@
 import React from "react";
 import styles from '../../../styles/Auth.module.css'
 import Image from 'next/image'
+import Link from "next/link";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Button from '@mui/material/Button'
@@ -10,22 +11,54 @@ import { useCreateAccountReducer } from "../../../hooks/reducers/useCreateAccoun
 import { useCheckEmailAvailability } from "../../../hooks/queries/useCheckEmailAvailability";
 import { useCheckUsernameAvailability } from "../../../hooks/queries/useCheckUsernameAvailability";
 import { BsArrowLeft } from "react-icons/bs";
+import { useRouter } from "next/router";
+import { useCreateAccount } from "../../../hooks/mutations/useCreateAccount";
+import { useSnackbar } from 'notistack'
+import LoadingBackdrop from "../../../components/modal/LoadingBackdrop/LoadingBackdrop";
 
 
 const Register = () => {
 
+    const router = useRouter()
+
     const [state, dispatch] = useCreateAccountReducer()
-    const [email, emailDispatch ] = useCheckEmailAvailability()
+    const [email, emailDispatch] = useCheckEmailAvailability()
     const [username, usernameDispatch] = useCheckUsernameAvailability()
+
+    const { createAccount, isLoading } = useCreateAccount()
+
+    const { enqueueSnackbar } = useSnackbar()
+
+    const handleSubmit = () => createAccount({
+        firstname: state.firstname.value,
+        lastname: state.lastname.value,
+        password: state.password.value,
+        username: username.value,
+        email: email.value
+    }).then(() => {
+        router.replace('/auth/register/profile')
+        enqueueSnackbar('Successfully created your account!', { variant: 'success' })
+    }).catch(() => {
+        enqueueSnackbar('Error creating account', { variant: 'error'})
+    })
 
     return (
         <div className={styles.page}>
             <form className={styles.form}>
-                <Button startIcon={<BsArrowLeft/>} className={styles.back}>Back</Button>
+                <Button 
+                    startIcon={<BsArrowLeft/>} 
+                    className={styles.back}
+                    onClick={() => router.back()}
+                >Back</Button>
                 <div className={styles.image}>
                     <Image src={'/logo-transparent-124.svg'} fill={true} alt={'Heron logo'}/>
                 </div>
-                <Typography variant={'h5'} fontWeight={600} color={'primary'} marginBottom={1}>Create your account</Typography>
+                <Typography 
+                    variant={'h5'} 
+                    fontWeight={600} 
+                    color={'primary'} 
+                    marginBottom={1}
+                >Create your account</Typography>
                 <TextField 
                     type={'text'}
                     label={'First Name'} 
@@ -92,8 +125,23 @@ const Register = () => {
                             </IconButton>
                     }}
                 />
-                <Button variant={'contained'} fullWidth size={'large'}>Get Started</Button>
+                <Button 
+                    variant={'contained'} 
+                    fullWidth={true} 
+                    size={'large'}
+                    className={styles.button}
+                    onClick={handleSubmit}
+                    disabled={
+                        !state.formValid || 
+                        (!email.available || !email.valid) || 
+                        (!username.available || !username.valid)
+                    }
+                >Get Started</Button>
+                <Typography>Already have an account?
+                    <Link href={'/auth/login'} className={styles.link}> Sign In</Link>
+                </Typography>
             </form>
+            {isLoading && <LoadingBackdrop/>}
         </div>
     );
 };

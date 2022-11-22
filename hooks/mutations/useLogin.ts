@@ -1,6 +1,7 @@
 import axios from "../../config/axios";
 import { AuthResponse } from '../../types/User'
 import { useState } from 'react'
+import { useAuth } from "../store/useAuth";
 
 interface UseLoginArgs {
     onSuccess: (data: AuthResponse) => void,
@@ -12,7 +13,10 @@ interface LoginParams {
     password: string
 }
 
+/** Handles localStorage and auth store */
 export const useLogin = ({ onSuccess, onError}: UseLoginArgs) => {
+
+    const { setUser } = useAuth()
 
     const [isLoading, setIsLoading] = useState(false)
     const [isError, setIsError] = useState(false)
@@ -22,6 +26,7 @@ export const useLogin = ({ onSuccess, onError}: UseLoginArgs) => {
         axios.post<AuthResponse>('/auth/login', params)
             .then(({ data }) => {
                 setIsLoading(false)
+                setUser(data)
                 onSuccess(data)
                 return data;
             })

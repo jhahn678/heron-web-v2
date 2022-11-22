@@ -19,8 +19,6 @@ const LoginPage = () => {
         if(isAuthenticated) router.replace('/profile')
     },[])
 
-    const setUser = useAuth(store => store.setUser)
-
     const { enqueueSnackbar } = useSnackbar()
 
     const [email, setEmail] = useState('')
@@ -28,7 +26,6 @@ const LoginPage = () => {
 
     const { isError, isLoading, loginUser } = useLogin({
         onSuccess: (res) => {
-            setUser(res);
             router.push('/');
             enqueueSnackbar('Login successful', { variant: 'success' })
         },
@@ -77,7 +74,7 @@ const LoginPage = () => {
                         variant='outlined' 
                         size={'large'} 
                         className={styles.button}
-                        onClick={() => router.push('/auth/forgot-my-password')}
+                        onClick={() => router.push('/auth/forgot-password')}
                     >Forgot My Password</Button>
                 </Stack>
                 <Typography>OR</Typography>
