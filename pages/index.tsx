@@ -34,6 +34,7 @@ export default function Home() {
       </section>
       <section className={styles.featureSliderSection}>
         <FeatureSlider/>
+        <Image src={'/swipe-left.svg'} height={48} width={48} className={styles.swipeIcon} alt={'Swipe left'}/>
       </section>
       <WaterbodiesSlider data={data?.waterbodies}/>
       <SharePicturesSection/>
