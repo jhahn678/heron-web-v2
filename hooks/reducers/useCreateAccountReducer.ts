@@ -1,21 +1,18 @@
-import { useReducer } from "react"
+import { Dispatch, useEffect, useReducer } from "react"
 
 type Action = 
 | { type: 'FIRSTNAME', value: string }
 | { type: 'LASTNAME', value: string }
 | { type: 'PASSWORD', value: string }
 | { type: 'PASSWORD_CONFIRM', value: string }
-| { type: 'CITY', value: string }
-| { type: 'STATE', value: string }
-| { type: 'BIO', value: string }
+| { type: 'VALIDATE_FORM' }
 | { type: 'TOGGLE_PASSWORD' }
 | { type: 'RESET' }
-| { type: 'NEXT_STEP' }
-| { type: 'LAST_STEP' }
 
 
 interface CreateAccountState {
     formStep: number,
+    formValid: boolean,
     firstname: {
         value: string,
         valid: boolean,
@@ -36,20 +33,12 @@ interface CreateAccountState {
         value: string,
         valid: boolean,
         touched: boolean
-    },
-    city: {
-        value: string,
-    },
-    state: {
-        value: string,
-    },
-    bio: {
-        value: string,
     }
 }
 
 const createAccountState: CreateAccountState = {
     formStep: 0,
+    formValid: false,
     firstname: {
         value: '',
         valid: false,
@@ -70,15 +59,6 @@ const createAccountState: CreateAccountState = {
         value: '',
         valid: false,
         touched: false
-    },
-    city: {
-        value: ''
-    },
-    state: {
-        value: ''
-    },
-    bio: {
-        value: ''
     }
 }
 
@@ -103,7 +83,7 @@ const createAccountReducer = (state: CreateAccountState, action: Action): Create
             }
         }
     }else if(action.type === 'PASSWORD'){
-        const { password } = state;
+        const { password , passwordConfirm } = state;
         return {
             ...state,
             password: {
@@ -111,6 +91,10 @@ const createAccountReducer = (state: CreateAccountState, action: Action): Create
                 valid: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/gm.test(action.value),
                 touched: true,
                 visible: password.visible
+            },
+            passwordConfirm: {
+                ...passwordConfirm,
+                valid: action.value === passwordConfirm.value
             }
         }
     }else if(action.type === 'PASSWORD_CONFIRM'){
@@ -123,27 +107,6 @@ const createAccountReducer = (state: CreateAccountState, action: Action): Create
                 touched: true
             }
         }
-    }else if(action.type === 'CITY'){
-        return {
-            ...state,
-            city: {
-                value: action.value
-            }
-        }
-    }else if(action.type === 'STATE'){
-        return {
-            ...state,
-            state: {
-                value: action.value
-            }
-        }
-    }else if(action.type === 'BIO'){
-        return {
-            ...state,
-            bio: {
-                value: action.value
-            }
-        }
     }else if(action.type === 'TOGGLE_PASSWORD'){
         const { password } = state;
         return {
@@ -153,25 +116,32 @@ const createAccountReducer = (state: CreateAccountState, action: Action): Create
                 visible: !password.visible
             }
         }
-    }else if(action.type === 'NEXT_STEP'){
-        const { formStep } = state;
-        return {
-            ...state,
-            formStep: formStep < 3 ? formStep + 1 : 3
-        }
-    }else if(action.type === 'LAST_STEP'){
-        const { formStep } = state;
-        return {
-            ...state,
-            formStep: formStep > 0 ? formStep - 1 : 0
-        }
     }else if(action.type === 'RESET'){
         return createAccountState;
+    }else if(action.type === 'VALIDATE_FORM'){
+        const { firstname, lastname, password, passwordConfirm } = state;
+        return {
+            ...state,
+            formValid: Boolean(firstname.valid && lastname.valid && password.valid && passwordConfirm.valid)
+        }
     }else{
         return state;
     }
 }
 
-export const useCreateAccountReducer = () => useReducer(createAccountReducer, createAccountState);
+export const useCreateAccountReducer = (): [CreateAccountState, Dispatch<Action>] => {
+    const [state, dispatch] = useReducer(createAccountReducer, createAccountState);
+
+    useEffect(() => {
+        dispatch({ type: 'VALIDATE_FORM' })
+    },[
+        state.firstname.valid, 
+        state.lastname.valid, 
+        state.password.valid, 
+        state.passwordConfirm.valid
+    ])
+
+    return [state, dispatch]
+}
     
 
