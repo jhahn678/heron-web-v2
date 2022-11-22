@@ -6,10 +6,19 @@ import { apolloClient } from '../config/apollo'
 import theme from '../config/theme'
 import { useCurrentLocation } from '../hooks/utils/useCurrentLocation'
 import { SnackbarProvider } from 'notistack';
+import { useEffect } from 'react'
+import { useAuth } from '../hooks/store/useAuth'
+import { Tokens } from '../types/LocalStorage'
 
 function MyApp({ Component, pageProps }) {
 
+  const { autoSignIn } = useAuth()
+
   useCurrentLocation()
+
+  useEffect(() => {
+    if(localStorage.getItem(Tokens.accessToken)) autoSignIn()
+  },[])
 
   return( 
     <ThemeProvider theme={theme}>

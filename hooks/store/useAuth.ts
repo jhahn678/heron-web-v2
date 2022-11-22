@@ -23,7 +23,7 @@ export interface AuthStore {
     setUser: (data: AuthResponse, isAuthenticated?: boolean) => Promise<void>,
     setAuthenticated: (authenticated: boolean) => void
     signOut: () => Promise<void>,
-    autoSignIn: (token: string) => Promise<void>,
+    autoSignIn: () => Promise<void>,
     getAccessToken: () => Promise<string | null>,
     setDetails: (args: { firstname?: string, username?: string, avatar?: string }) => void
 }
@@ -43,7 +43,6 @@ export const useAuth = create<AuthStore>((set) => ({
     setAuthenticated: isAuthenticated => set({ isAuthenticated }),
     setDetails: details => set({ ...details }),
     signOut: async () => {
-        localStorage.removeItem(Tokens.accessToken);
         set({
             id: null,
             avatar: null,
@@ -51,11 +50,16 @@ export const useAuth = create<AuthStore>((set) => ({
             firstname: null,
             isAuthenticated: false
         })
+        localStorage.removeItem(Tokens.accessToken);
+        axios.post('/auth/logout', {}, { withCredentials: true })
+            .catch(err => console.error(err))
     },
     autoSignIn: async () => {
         try{
-            const { data } = await axios
-                .post<AuthResponse>('/auth/token', { includeUser: true })
+            const { data } = await axios.post<AuthResponse>(
+                '/auth/token', 
+                { includeUser: true }, 
+                { withCredentials: true })
             const { accessToken, refreshToken, ...user } = data;
             localStorage.setItem(Tokens.accessToken, accessToken)
             set({ isAuthenticated: true, ...user })
@@ -65,9 +69,9 @@ export const useAuth = create<AuthStore>((set) => ({
     },
     getAccessToken: async () => {
         try{
-            const { data } = await axios.post<TokenResponse>('/auth/token')
+            const { data } = await axios.post<TokenResponse>('/auth/token', {}, { withCredentials: true })
             localStorage.setItem(Tokens.accessToken, data.accessToken)
-            return data.accessToken
+            return data.accessToken;
         }catch(err){
             console.error('error getting/refreshing access token', err)
             set({ isAuthenticated: false })
