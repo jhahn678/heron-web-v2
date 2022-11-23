@@ -1,5 +1,5 @@
 import { gql, useMutation } from '@apollo/client'
-import { useAuth } from '../../store/auth/useAuth'
+import { useAuth } from '../../hooks/store/useAuth'
 import { IUser } from '../../types/User'
 import { GET_MY_PROFILE, GET_MY_PROFILE_TOTALS } from '../queries/useGetMyProfile'
 
