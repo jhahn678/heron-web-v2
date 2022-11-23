@@ -7,10 +7,7 @@ interface CreateAccountParams {
     lastname: string,
     email: string,
     username: string,
-    password: string,
-    city: string | undefined
-    state: string | undefined
-    bio: string | undefined
+    password: string
 }
 
 export const useCreateAccount = () => {
@@ -23,7 +20,7 @@ export const useCreateAccount = () => {
     const createAccount = async (params: CreateAccountParams): Promise<AuthResponse | void> => {
         setIsLoading(true)
         try{
-            const { data } = await axios.post<AuthResponse>('/auth/register', params)
+            const { data } = await axios.post<AuthResponse>('/auth/register', params, { withCredentials: true })
             setUser(data); 
             setIsLoading(false); 
             return data;
