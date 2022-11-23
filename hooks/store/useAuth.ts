@@ -48,7 +48,7 @@ export const useAuth = create<AuthStore>((set) => ({
             avatar: null,
             username: null,
             firstname: null,
-            isAuthenticated: false
+            isAuthenticated: false,
         })
         localStorage.removeItem(Tokens.accessToken);
         axios.post('/auth/logout', {}, { withCredentials: true })
