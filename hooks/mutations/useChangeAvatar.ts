@@ -1,5 +1,5 @@
 import { gql, useMutation } from '@apollo/client'
-import { useAuth } from '../../store/auth/useAuth'
+import { useAuth } from '../store/useAuth'
 import { GET_MY_PROFILE } from '../queries/useGetMyProfile'
 
 const CHANGE_AVATAR = gql`
