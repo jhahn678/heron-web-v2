@@ -23,7 +23,7 @@ export const useLogin = ({ onSuccess, onError}: UseLoginArgs) => {
 
     const loginUser = async (params: LoginParams): Promise<AuthResponse | void> => {
         setIsLoading(true)
-        axios.post<AuthResponse>('/auth/login', params)
+        axios.post<AuthResponse>('/auth/login', params, { withCredentials: true })
             .then(({ data }) => {
                 setIsLoading(false)
                 setUser(data)
