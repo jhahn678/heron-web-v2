@@ -25,7 +25,10 @@ const Header = ({ fixed }: Props) => {
     const [drawer, setDrawer] = useState(false)
     const maxWidth750 = useMediaQuery('(max-width: 750px)')
 
-    const { isAuthenticated, avatar, firstname } = useAuth()
+    const { isAuthenticated, avatar, firstname, signOut } = useAuth()
+
+    const handleSignOut = () => { signOut(); setDrawer(false) }
+
     const [hasScrolled, setHasScrolled] = useState(false)
 
     useEffect(() => {
@@ -51,7 +54,6 @@ const Header = ({ fixed }: Props) => {
                     <Drawer anchor={'left'} open={drawer} onClose={() => setDrawer(false)}>
                         <div className={styles.drawer}>
                             <div className={styles.drawerHeader}>
-
                                 <IconButton onClick={() => setDrawer(false)}>
                                     <MdClose size={36} color={'var(--primary)'}/>
                                 </IconButton>
@@ -68,8 +70,8 @@ const Header = ({ fixed }: Props) => {
                                 { isAuthenticated ? 
                                     <Stack gap={2}>
                                         <Divider/>
-                                        <li className={styles.drawerLinkSmall}><Link href={'/faq'}>Settings</Link></li>
-                                        <li className={styles.drawerLinkSmall}><Link href={'/privacy-policy.html'}>Sign out</Link></li>
+                                        <li className={styles.drawerLinkSmall}><Link href={'/settings'}>Settings</Link></li>
+                                        <li className={styles.drawerLinkSmall} onClick={handleSignOut}>Sign out</li>
                                     </Stack> :
                                     <Stack gap={1}>
                                         <Divider style={{ marginBottom: 16}}/>
