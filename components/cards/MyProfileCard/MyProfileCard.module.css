@@ -1,0 +1,11 @@
+.card {
+    width: max-content;
+    padding: 0 2em;
+    display: flex;
+    align-items: center;
+}
+
+.avatar{
+    height: 60px;
+    width: 60px;
+}
