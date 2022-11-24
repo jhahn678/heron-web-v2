@@ -13,6 +13,7 @@ import { BiMenuAltRight } from 'react-icons/bi'
 import { MdClose } from 'react-icons/md'
 import { useAuth } from "../../../hooks/store/useAuth";
 import { useRouter } from "next/router";
+import { nameToInitials } from "../../../utils/transforms/nameToInitials";
 
 interface Props {
     fixed?: boolean
@@ -20,16 +21,14 @@ interface Props {
 
 const Header = ({ fixed }: Props) => {
 
+    const auth = useAuth()
     const router = useRouter()
 
     const [drawer, setDrawer] = useState(false)
+    const [hasScrolled, setHasScrolled] = useState(false)
     const maxWidth750 = useMediaQuery('(max-width: 750px)')
 
-    const { isAuthenticated, avatar, firstname, signOut } = useAuth()
-
-    const handleSignOut = () => { signOut(); setDrawer(false) }
-
-    const [hasScrolled, setHasScrolled] = useState(false)
+    const handleSignOut = () => { auth.signOut(); setDrawer(false) }
 
     useEffect(() => {
         const handleScroll = () => setHasScrolled(window.scrollY > 50)
@@ -67,7 +66,7 @@ const Header = ({ fixed }: Props) => {
                                 <li className={styles.drawerLinkSmall}><Link href={'/faq'}>FAQ</Link></li>
                                 <li className={styles.drawerLinkSmall}><Link href={'/privacy-policy.html'}>Privacy Policy</Link></li>
                                 <li className={styles.drawerLinkSmall}><Link href={'/terms-of-service.html'}>Terms of Service</Link></li>
-                                { isAuthenticated ? 
+                                { auth.isAuthenticated ? 
                                     <Stack gap={2}>
                                         <Divider/>
                                         <li className={styles.drawerLinkSmall}><Link href={'/settings'}>Settings</Link></li>
@@ -102,17 +101,21 @@ const Header = ({ fixed }: Props) => {
                     <li className={styles.navLink}><Link href={'/explore'}>Explore</Link></li>
                     <li className={styles.navLink}><Link href={'/profile'}>Profile</Link></li>
                     <li className={styles.navLink}><Link href={'/support'}>Support</Link></li>
-                    {isAuthenticated ? 
-                        avatar ?
-                            <Avatar src={avatar} alt={'User Avatar'} className={styles.avatar}/> :
-                        firstname ?
-                            <Avatar sx={{ bgcolor: 'var(--primary)' }} className={styles.avatar}>{firstname[0]}</Avatar> :
-                            <Avatar sx={{ bgcolor: 'var(--primary)' }} className={styles.avatar}/> :
-                            <Button 
-                                size="large" 
-                                variant="contained" 
-                                onClick={() => router.push('/auth/login')}
-                            >Sign in</Button>
+                    {auth.isAuthenticated ? 
+                        <Avatar 
+                            src={auth.avatar} 
+                            sx={{ bgcolor: 'var(--primary)' }} 
+                            alt={'Your profile'} 
+                            className={styles.avatar}
+                            onClick={() => router.push('/profile')}
+                        >
+                            {nameToInitials(auth.firstname, auth.lastname)}
+                        </Avatar> :
+                        <Button 
+                            size="large" 
+                            variant="contained" 
+                            onClick={() => router.push('/auth/login')}
+                        >Sign in</Button>
                     }
                 </ul>
             }
