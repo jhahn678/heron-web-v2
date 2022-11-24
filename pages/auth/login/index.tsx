@@ -13,16 +13,15 @@ import { useRouter } from "next/router";
 const LoginPage = () => {
 
     const router = useRouter()
+    const { enqueueSnackbar } = useSnackbar()
     const isAuthenticated = useAuth(store => store.isAuthenticated)
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
 
     useEffect(() => {
         if(isAuthenticated) router.replace('/profile')
     },[])
-
-    const { enqueueSnackbar } = useSnackbar()
-
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
 
     const { isError, isLoading, loginUser } = useLogin({
         onSuccess: (res) => {
@@ -46,7 +45,9 @@ const LoginPage = () => {
                 <div className={styles.image}>
                     <Image src={'/logo-transparent-124.svg'} fill={true} alt={'Heron logo'}/>
                 </div>
-                <Typography variant={'h5'} fontWeight={600} color={'primary'} marginBottom={1}>Sign in to Heron</Typography>
+                <Typography variant={'h5'} fontWeight={600} color={'primary'} marginBottom={1}>
+                    Sign in to Heron
+                </Typography>
                 <TextField 
                     label={'Email'} 
                     value={email} 
