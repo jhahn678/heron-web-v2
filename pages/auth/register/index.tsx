@@ -15,19 +15,21 @@ import { useRouter } from "next/router";
 import { useCreateAccount } from "../../../hooks/mutations/useCreateAccount";
 import { useSnackbar } from 'notistack'
 import LoadingBackdrop from "../../../components/modal/LoadingBackdrop/LoadingBackdrop";
+import { useAuth } from "../../../hooks/store/useAuth";
+import MyProfileCard from "../../../components/cards/MyProfileCard/MyProfileCard";
+import Stack from "@mui/material/Stack";
 
 
 const Register = () => {
 
+    const auth = useAuth()
     const router = useRouter()
+    const { enqueueSnackbar } = useSnackbar()
+    const { createAccount, isLoading } = useCreateAccount()
 
     const [state, dispatch] = useCreateAccountReducer()
     const [email, emailDispatch] = useCheckEmailAvailability()
     const [username, usernameDispatch] = useCheckUsernameAvailability()
-
-    const { createAccount, isLoading } = useCreateAccount()
-
-    const { enqueueSnackbar } = useSnackbar()
 
     const handleSubmit = () => createAccount({
         firstname: state.firstname.value,
@@ -44,103 +46,130 @@ const Register = () => {
 
     return (
         <div className={styles.page}>
-            <form className={styles.form}>
-                <Button 
-                    startIcon={<BsArrowLeft/>} 
-                    className={styles.back}
-                    onClick={() => router.back()}
-                >Back</Button>
-                <div className={styles.image}>
-                    <Image src={'/logo-transparent-124.svg'} fill={true} alt={'Heron logo'}/>
-                </div>
-                <Typography 
-                    variant={'h5'} 
-                    fontWeight={600} 
-                    color={'primary'} 
-                    marginBottom={1}
-                >Create your account</Typography>
-                <TextField 
-                    type={'text'}
-                    label={'First Name'} 
-                    className={styles.input}
-                    value={state.firstname.value} 
-                    error={!state.firstname.valid && state.firstname.touched}
-                    onChange={e => dispatch({ type: 'FIRSTNAME', value: e.target.value})} 
-                />
-                <TextField 
-                    type={'text'}
-                    label={'Last Name'}
-                    className={styles.input}
-                    value={state.lastname.value} 
-                    error={!state.lastname.valid && state.lastname.touched}
-                    onChange={e => dispatch({ type: 'LASTNAME', value: e.target.value})} 
+            { auth.isAuthenticated ? 
+
+                <div className={styles.form}>
+                    <div className={styles.image}>
+                        <Image src={'/logo-transparent-124.svg'} fill={true} alt={'Heron logo'}/>
+                    </div>
+                    <Typography variant={'h5'} fontWeight={600} color={'primary'} marginBottom={1}>
+                        You are already logged in
+                    </Typography>
+                    <MyProfileCard/>
+                    <Stack gap={1} width={'100%'} marginTop={1}>
+                        <Button 
+                            variant={"contained"}
+                            size={'large'} 
+                            className={styles.button}
+                            onClick={() => router.push('/profile')}
+                        >Go to my profile</Button>
+                        <Button 
+                            variant={'outlined'} 
+                            size={'large'} 
+                            className={styles.button}
+                            onClick={auth.signOut}
+                        >Sign out</Button>
+                    </Stack>
+                </div> :
+
+                <form className={styles.form}>
+                    <Button 
+                        startIcon={<BsArrowLeft/>} 
+                        className={styles.back}
+                        onClick={() => router.back()}
+                    >Back</Button>
+                    <div className={styles.image}>
+                        <Image src={'/logo-transparent-124.svg'} fill={true} alt={'Heron logo'}/>
+                    </div>
+                    <Typography 
+                        variant={'h5'} 
+                        fontWeight={600} 
+                        color={'primary'} 
+                        marginBottom={1}
+                    >Create your account</Typography>
+                    <TextField 
+                        type={'text'}
+                        label={'First Name'} 
+                        className={styles.input}
+                        value={state.firstname.value} 
+                        error={!state.firstname.valid && state.firstname.touched}
+                        onChange={e => dispatch({ type: 'FIRSTNAME', value: e.target.value})} 
                     />
-                <TextField 
-                    type={'email'}
-                    label={'Email'}
-                    value={email.value} 
-                    className={styles.input}
-                    error={email.touched && (!email.valid || !email.available)}
-                    onChange={e => emailDispatch({ type: 'INPUT', value: e.target.value })} 
-                />
-                <TextField 
-                    type={'email'}
-                    label={'Username'} 
-                    value={username.value} 
-                    className={styles.input}
-                    error={username.touched && (!username.valid || !username.available)}
-                    onChange={e => usernameDispatch({ type: 'INPUT', value: e.target.value })} 
-                />
-                <TextField 
-                    label={'Password'} 
-                    className={styles.input}
-                    value={state.password.value} 
-                    type={state.password.visible ? 'text' : 'password'}
-                    error={!state.password.valid && state.password.touched}
-                    onChange={e => dispatch({ type: 'PASSWORD', value: e.target.value})} 
-                    InputProps={{ 
-                        endAdornment: state.password.visible ? 
-                            <IconButton onClick={() => dispatch({ type: 'TOGGLE_PASSWORD'})}>
-                                <MdVisibilityOff/>
-                            </IconButton> :
-                            <IconButton onClick={() => dispatch({ type: 'TOGGLE_PASSWORD'})}>
-                                <MdVisibility/>
-                            </IconButton>
-                    }}
-                />
-                <TextField 
-                    className={styles.input}
-                    label={'Confirm password'} 
-                    value={state.passwordConfirm.value} 
-                    type={state.password.visible ? 'text' : 'password'}
-                    error={!state.passwordConfirm.valid && state.passwordConfirm.touched}
-                    onChange={e => dispatch({ type: 'PASSWORD_CONFIRM', value: e.target.value})} 
-                    InputProps={{ 
-                        endAdornment: state.password.visible ? 
-                            <IconButton onClick={() => dispatch({ type: 'TOGGLE_PASSWORD'})}>
-                                <MdVisibilityOff/>
-                            </IconButton> :
-                            <IconButton onClick={() => dispatch({ type: 'TOGGLE_PASSWORD'})}>
-                                <MdVisibility/>
-                            </IconButton>
-                    }}
-                />
-                <Button 
-                    variant={'contained'} 
-                    fullWidth={true} 
-                    size={'large'}
-                    className={styles.button}
-                    onClick={handleSubmit}
-                    disabled={
-                        !state.formValid || 
-                        (!email.available || !email.valid) || 
-                        (!username.available || !username.valid)
-                    }
-                >Get Started</Button>
-                <Typography>Already have an account?
-                    <Link href={'/auth/login'} className={styles.link}> Sign In</Link>
-                </Typography>
-            </form>
+                    <TextField 
+                        type={'text'}
+                        label={'Last Name'}
+                        className={styles.input}
+                        value={state.lastname.value} 
+                        error={!state.lastname.valid && state.lastname.touched}
+                        onChange={e => dispatch({ type: 'LASTNAME', value: e.target.value})} 
+                        />
+                    <TextField 
+                        type={'email'}
+                        label={'Email'}
+                        value={email.value} 
+                        className={styles.input}
+                        error={email.touched && (!email.valid || !email.available)}
+                        onChange={e => emailDispatch({ type: 'INPUT', value: e.target.value })} 
+                    />
+                    <TextField 
+                        type={'email'}
+                        label={'Username'} 
+                        value={username.value} 
+                        className={styles.input}
+                        error={username.touched && (!username.valid || !username.available)}
+                        onChange={e => usernameDispatch({ type: 'INPUT', value: e.target.value })} 
+                    />
+                    <TextField 
+                        label={'Password'} 
+                        className={styles.input}
+                        value={state.password.value} 
+                        type={state.password.visible ? 'text' : 'password'}
+                        error={!state.password.valid && state.password.touched}
+                        onChange={e => dispatch({ type: 'PASSWORD', value: e.target.value})} 
+                        InputProps={{ 
+                            endAdornment: state.password.visible ? 
+                                <IconButton onClick={() => dispatch({ type: 'TOGGLE_PASSWORD'})}>
+                                    <MdVisibilityOff/>
+                                </IconButton> :
+                                <IconButton onClick={() => dispatch({ type: 'TOGGLE_PASSWORD'})}>
+                                    <MdVisibility/>
+                                </IconButton>
+                        }}
+                    />
+                    <TextField 
+                        className={styles.input}
+                        label={'Confirm password'} 
+                        value={state.passwordConfirm.value} 
+                        type={state.password.visible ? 'text' : 'password'}
+                        error={!state.passwordConfirm.valid && state.passwordConfirm.touched}
+                        onChange={e => dispatch({ type: 'PASSWORD_CONFIRM', value: e.target.value})} 
+                        InputProps={{ 
+                            endAdornment: state.password.visible ? 
+                                <IconButton onClick={() => dispatch({ type: 'TOGGLE_PASSWORD'})}>
+                                    <MdVisibilityOff/>
+                                </IconButton> :
+                                <IconButton onClick={() => dispatch({ type: 'TOGGLE_PASSWORD'})}>
+                                    <MdVisibility/>
+                                </IconButton>
+                        }}
+                    />
+                    <Button 
+                        variant={'contained'} 
+                        fullWidth={true} 
+                        size={'large'}
+                        className={styles.button}
+                        onClick={handleSubmit}
+                        disabled={
+                            !state.formValid || 
+                            (!email.available || !email.valid) || 
+                            (!username.available || !username.valid)
+                        }
+                    >Get Started</Button>
+                    <Typography>Already have an account?
+                        <Link href={'/auth/login'} className={styles.link}> Sign In</Link>
+                    </Typography>
+                </form>
+            }
             {isLoading && <LoadingBackdrop/>}
         </div>
     );
