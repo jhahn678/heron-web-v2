@@ -10,6 +10,7 @@ export interface TokenResponse {
 export interface AuthResponse extends TokenResponse{
     id: number,
     firstname: string,
+    lastname: string,
     username: string, 
     avatar: string, 
 }
@@ -17,6 +18,7 @@ export interface AuthResponse extends TokenResponse{
 export interface AuthStore {
     id: number | null
     firstname: string | null
+    lastname: string | null
     username: string | null
     avatar: string | null
     isAuthenticated: boolean,
@@ -32,6 +34,7 @@ export interface AuthStore {
 export const useAuth = create<AuthStore>((set) => ({
     id: null,
     firstname: null,
+    lastname: null,
     username: null,
     avatar: null,
     isAuthenticated: false,
@@ -48,6 +51,7 @@ export const useAuth = create<AuthStore>((set) => ({
             avatar: null,
             username: null,
             firstname: null,
+            lastname: null,
             isAuthenticated: false,
         })
         localStorage.removeItem(Tokens.accessToken);
