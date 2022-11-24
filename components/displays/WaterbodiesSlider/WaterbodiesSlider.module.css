@@ -13,9 +13,25 @@
     width: fit-content;
     align-self: center;
  }
+ .errorButton{
+   width: fit-content;
+   align-self: center;
+   margin-top: 64px;
+   padding-top: 2em;
+   margin-bottom: 64px;
+   padding-bottom: 2em;
+ }
  .paddingX{
     padding-left: 16px;
     padding-right: 16px;
+ }
+
+ .loader{
+   width: 90vw;
+   max-width: 400px;
+   height: 90vh;
+   max-height: 350px;
+   border-radius: 16px;
  }
 
  @media screen and (min-width: 800px) {

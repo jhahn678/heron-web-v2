@@ -14,7 +14,7 @@ import LandingSection from '../components/layout/Home/LandingSection/LandingSect
 
 export default function Home() {
 
-  const { data, error } = useGetNearbyWaterbodies()
+  const { data, loading, refetch } = useGetNearbyWaterbodies()
 
   return (
     <div className={styles.page}>
@@ -36,7 +36,7 @@ export default function Home() {
         <FeatureSlider/>
         <Image src={'/swipe-left.svg'} height={48} width={48} className={styles.swipeIcon} alt={'Swipe left'}/>
       </section>
-      <WaterbodiesSlider data={data?.waterbodies}/>
+      <WaterbodiesSlider data={data?.waterbodies} loading={loading} refetch={refetch}/>
       <SharePicturesSection/>
       <FAQSection/>
       <Footer/>
