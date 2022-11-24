@@ -79,6 +79,7 @@
 .avatar{
     height: 50px;
     width: 50px;
+    cursor: pointer;
 }
 
 @media screen and (max-height: 650px) {
