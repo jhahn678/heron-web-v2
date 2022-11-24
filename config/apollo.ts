@@ -7,10 +7,13 @@ import {
 import { RetryLink } from "@apollo/client/link/retry";
 import { onError } from '@apollo/client/link/error'
 import { WaterbodyMedia } from "../types/Media";
+import { RefreshTokenLink } from "../utils/apollo/RefreshTokenLink";
 
 const httpLink = createHttpLink({ uri: process.env.NEXT_PUBLIC_API_GRAPH_URL });
 
 const retryLink = new RetryLink()
+
+const authTokenLink = new RefreshTokenLink()
 
 const errorLink = onError(({ graphQLErrors }) => {
     if(graphQLErrors){    
@@ -21,7 +24,7 @@ const errorLink = onError(({ graphQLErrors }) => {
 })
 
 export const apolloClient = new ApolloClient({
-    link: from([errorLink, retryLink, httpLink]),
+    link: from([authTokenLink, errorLink, retryLink, httpLink]),
     cache: new InMemoryCache({
         typePolicies: {
             Query: {
