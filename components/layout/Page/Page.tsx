@@ -1,9 +1,14 @@
 import React from "react";
 import styles from './Page.module.css'
 
-const Page = () => {
+interface Props {
+    className?: string
+    children: React.ReactNode
+}
+
+const Page = ({ children, className }: Props) => {
     return(
-        <div className={styles.page}>Page</div>
+        <div className={`${styles.page} ${className}`}>{children}</div>
     );
 };
 
