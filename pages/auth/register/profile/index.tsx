@@ -44,9 +44,8 @@ const RegisterProfile = () => {
             await updateAvatar({ variables: { avatar: response }})
         }
         updateProfile({ variables: { details: { bio, city, state } }})
-            .then((res) => {
-                console.log(res)
-                notification.enqueueSnackbar('Your profile has been updated', { variant: 'success' })
+            .then(() => {
+                notification.enqueueSnackbar('Your profile has been saved', { variant: 'success' })
                 router.replace('/')
             })
             .catch(() => notification.enqueueSnackbar('Error saving profile', { variant: 'error' }))
