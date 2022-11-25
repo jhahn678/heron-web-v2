@@ -13,7 +13,7 @@ const httpLink = createHttpLink({ uri: process.env.NEXT_PUBLIC_API_GRAPH_URL });
 
 const retryLink = new RetryLink()
 
-const authTokenLink = new RefreshTokenLink()
+const authTokenLink = new RefreshTokenLink(() => window.location.href = '/auth/login')
 
 const errorLink = onError(({ graphQLErrors }) => {
     if(graphQLErrors){    
