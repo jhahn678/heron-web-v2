@@ -98,7 +98,8 @@ export class RefreshTokenLink extends ApolloLink {
                         console.log(err)
                         if(err.status === 401){
                             //If refreshing token fails due to expired refresh token
-                            //This should redirect user to login page
+                            //Redirect user to login page
+                            //Reload should clear auth state
                             this.onReauthenticate()
                         }else{
                             this.setAuthorization(operation)
