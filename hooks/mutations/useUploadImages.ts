@@ -1,6 +1,5 @@
 import { AxiosError } from 'axios';
 import axios from '../../config/axios'
-import { MediaInput } from "../../types/Media";
 import { useAuth } from '../store/useAuth';
 import { FileWithPath } from '@mantine/dropzone'
 
@@ -24,8 +23,7 @@ export const useUploadImages = () => {
     /**
      * #### Multiple attempts and no signed url means there was an error with authentication
      * @param mimetype mimetype from image
-     * @param token access token
-     * @returns Object with number of attempts and signed url if one was made
+     * @returns Object with signedUrl and meta obj
      */
     const getSignedUrl = async (mimetype: string): Promise<GetSignedUrlRes> => {
         try{
