@@ -10,6 +10,7 @@ import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import { useRouter } from "next/router";
+import Divider from "@mui/material/Divider";
 
 const MyProfilePage = () => {
 
@@ -30,9 +31,11 @@ const MyProfilePage = () => {
                 </Avatar>
                 <Stack gap={.5}>
                     <Typography variant={'h5'} fontWeight={500}>{auth.firstname} {auth.lastname}</Typography>
-                    <Chip label={`@${auth.username}`} size='medium' variant="outlined"/>
+                    <Chip label={`@${auth.username}`} size='medium' variant="outlined" style={{ maxWidth: 'fit-content' }}/>
+                    <Typography variant={'body2'}>Member since April 2022</Typography>
                 </Stack>
             </Stack>
+            <Divider/>
         </Page>
     );
 };
